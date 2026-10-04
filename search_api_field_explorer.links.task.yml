@@ -1,0 +1,23 @@
+search_api_field_explorer.browse_tab:
+  title: 'Field Explorer'
+  route_name: search_api_field_explorer.browse
+  base_route: entity.search_api_index.canonical
+  weight: 15
+
+search_api_field_explorer.cleanup_tab:
+  title: 'Field Explorer: Cleanup'
+  route_name: search_api_field_explorer.cleanup
+  base_route: entity.search_api_index.canonical
+  weight: 20
+
+search_api_field_explorer.search_tab:
+  title: 'Search by entity type'
+  route_name: search_api_field_explorer.search_by_entity_type
+  base_route: search_api_field_explorer.search_by_entity_type
+  weight: 0
+
+search_api_field_explorer.settings_tab:
+  title: 'Settings'
+  route_name: search_api_field_explorer.settings
+  base_route: search_api_field_explorer.search_by_entity_type
+  weight: 10

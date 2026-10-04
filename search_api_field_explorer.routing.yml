@@ -1,0 +1,54 @@
+search_api_field_explorer.browse:
+  path: '/admin/config/search/search-api/index/{search_api_index}/field-explorer'
+  defaults:
+    _form: '\Drupal\search_api_field_explorer\Form\BrowseIndexForm'
+    _title: 'Field Explorer'
+  requirements:
+    _permission: 'access search api field explorer'
+    _entity_access: 'search_api_index.fields'
+  options:
+    parameters:
+      search_api_index:
+        type: 'entity:search_api_index'
+
+search_api_field_explorer.search_by_entity_type:
+  path: '/admin/config/search/search-api/field-explorer/by-entity-type'
+  defaults:
+    _form: '\Drupal\search_api_field_explorer\Form\SearchByEntityTypeForm'
+    _title: 'Search by entity type'
+  requirements:
+    _permission: 'access search api field explorer'
+
+search_api_field_explorer.settings:
+  path: '/admin/config/search/search-api/field-explorer/settings'
+  defaults:
+    _form: '\Drupal\search_api_field_explorer\Form\SettingsForm'
+    _title: 'Field Explorer settings'
+  requirements:
+    _permission: 'access search api field explorer'
+
+search_api_field_explorer.cleanup:
+  path: '/admin/config/search/search-api/index/{search_api_index}/field-explorer/cleanup'
+  defaults:
+    _form: '\Drupal\search_api_field_explorer\Form\OrphanedTablesForm'
+    _title: 'Field Explorer: Cleanup'
+  requirements:
+    _permission: 'cleanup orphaned search api tables'
+    _entity_access: 'search_api_index.fields'
+  options:
+    parameters:
+      search_api_index:
+        type: 'entity:search_api_index'
+
+search_api_field_explorer.cleanup_confirm:
+  path: '/admin/config/search/search-api/index/{search_api_index}/field-explorer/cleanup/confirm'
+  defaults:
+    _form: '\Drupal\search_api_field_explorer\Form\OrphanedTablesConfirmForm'
+    _title: 'Confirm table deletion'
+  requirements:
+    _permission: 'cleanup orphaned search api tables'
+    _entity_access: 'search_api_index.fields'
+  options:
+    parameters:
+      search_api_index:
+        type: 'entity:search_api_index'

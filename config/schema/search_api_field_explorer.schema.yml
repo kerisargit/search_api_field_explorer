@@ -1,0 +1,10 @@
+search_api_field_explorer.settings:
+  type: config_object
+  label: 'Search API Field Explorer settings'
+  mapping:
+    max_depth:
+      type: integer
+      label: 'Maximum property-tree recursion depth (default 5, clamped 1-20)'
+    node_budget:
+      type: integer
+      label: 'Maximum discovered nodes per tree walk before truncating (default 5000)'

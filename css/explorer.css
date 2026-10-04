@@ -1,0 +1,51 @@
+.search-api-field-explorer-badge {
+  display: inline-block;
+  padding: 0 0.4em;
+  border-radius: 0.8em;
+  background: #eef3fb;
+  border: 1px solid #c9d9f0;
+  font-size: 0.85em;
+  cursor: help;
+}
+
+.search-api-field-explorer-tree-label {
+  display: inline-block;
+  padding-left: calc(var(--sasfe-depth, 0) * 1.25em);
+}
+
+.search-api-field-explorer-tree-wrapper details {
+  padding-left: 1.1em;
+  border-left: 2px solid #e3e3e3;
+  margin: 0.15em 0;
+}
+.search-api-field-explorer-tree-wrapper details > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.search-api-field-explorer-tree-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.2em 0;
+  flex-wrap: wrap;
+}
+.search-api-field-explorer-tree-row-type {
+  font-size: 0.85em;
+  color: #777;
+}
+.search-api-field-explorer-tree-row-path {
+  font-size: 0.85em;
+  color: #777;
+}
+
+.search-api-field-explorer-tree-row-agg,
+.search-api-field-explorer-tree-row-agg label {
+  font-size: 0.85em;
+  color: #777;
+}
+.search-api-field-explorer-tree-row-agg {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  margin: 0;
+}

@@ -1,0 +1,10 @@
+{
+    "name": "kerisargit/search_api_field_explorer",
+    "type": "drupal-custom-module",
+    "description": "Discovers and adds Search API fields across the full property tree.",
+    "require": {
+        "php": ">=8.1",
+        "drupal/core": "^10",
+        "drupal/search_api": "^1.14"
+    }
+}

@@ -1,0 +1,263 @@
+# Russian translation for Search API Field Explorer.
+# Copyright (C) 2026
+# This file is distributed under the same license as the search_api_field_explorer module.
+msgid ""
+msgstr ""
+"Project-Id-Version: search_api_field_explorer\n"
+"PO-Revision-Date: 2026-07-28\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+# ---------------------------------------------------------------------------
+# Routing titles, menu links, local tasks
+# ---------------------------------------------------------------------------
+
+msgid "Field Explorer"
+msgstr "Обозреватель полей"
+
+msgid "Search by entity type"
+msgstr "Поиск по типу сущности"
+
+msgid "Field Explorer settings"
+msgstr "Настройки обозревателя полей"
+
+msgid "Search API Field Explorer"
+msgstr "Search API Field Explorer"
+
+msgid "Search across all configured Search API indexes for property chains leading to a given entity type, and add them as index fields."
+msgstr "Поиск по всем настроенным индексам Search API цепочек свойств, ведущих к заданному типу сущности, с возможностью добавить их как поля индекса."
+
+msgid "Configure the maximum property-tree depth and node budget used by Search API Field Explorer."
+msgstr "Настройка максимальной глубины дерева свойств и лимита узлов, используемых Search API Field Explorer."
+
+msgid "Settings"
+msgstr "Настройки"
+
+# ---------------------------------------------------------------------------
+# SettingsForm
+# ---------------------------------------------------------------------------
+
+msgid "Maximum property-tree depth"
+msgstr "Максимальная глубина дерева свойств"
+
+msgid "How many levels of nested entity references to follow when walking a property tree. Clamped to @min-@max regardless of what is entered here."
+msgstr "Сколько уровней вложенных ссылок на сущности проходить при обходе дерева свойств. Значение всегда ограничивается диапазоном @min-@max, что бы здесь ни было введено."
+
+msgid "Node budget per tree walk"
+msgstr "Лимит узлов на один обход дерева"
+
+msgid "Maximum number of properties to discover in a single walk before truncating (a safety net against very wide entity/bundle graphs). Clamped to @min-@max."
+msgstr "Максимальное число свойств, которые обнаруживаются за один обход, прежде чем результат обрежется (защита от очень широких графов сущностей/типов). Значение всегда ограничивается диапазоном @min-@max."
+
+# ---------------------------------------------------------------------------
+# Shared across BrowseIndexForm and SearchByEntityTypeForm
+# ---------------------------------------------------------------------------
+
+msgid "Max depth"
+msgstr "Макс. глубина"
+
+msgid "General"
+msgstr "Общие"
+
+msgid "(already indexed as %field)"
+msgstr "(уже проиндексировано как %field)"
+
+msgid "Label"
+msgstr "Метка"
+
+msgid "Machine name"
+msgstr "Системное имя"
+
+msgid "Property path"
+msgstr "Путь свойства"
+
+msgid "Datasource"
+msgstr "Источник данных"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Same as"
+msgstr "То же, что и"
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "Also as aggregation target"
+msgstr "Также как цель для агрегации"
+
+msgid "any bundle"
+msgstr "любой подтип"
+
+msgid "Add selected fields"
+msgstr "Добавить выбранные поля"
+
+msgid "Select all"
+msgstr "Выбрать всё"
+
+msgid "Select none"
+msgstr "Снять всё"
+
+msgid "Select at least one field to add."
+msgstr "Выберите хотя бы одно поле для добавления."
+
+msgid "Skipped @n field(s) that could not be resolved or mapped to a type: @list"
+msgstr "Пропущено полей: @n — не удалось определить свойство или сопоставить тип: @list"
+
+# ---------------------------------------------------------------------------
+# BrowseIndexForm
+# ---------------------------------------------------------------------------
+
+msgid "Apply"
+msgstr "Применить"
+
+msgid "Rebuild tree (clear cache)"
+msgstr "Пересобрать дерево (очистить кэш)"
+
+msgid "List view"
+msgstr "Вид списком"
+
+msgid "Tree view"
+msgstr "Вид деревом"
+
+msgid "The property tree for %datasource was too large to walk fully at this depth and was truncated. Lower \"Max depth\" or raise the node budget in the settings."
+msgstr "Дерево свойств для %datasource оказалось слишком большим, чтобы обойти его полностью на этой глубине, и было обрезано. Уменьшите «Макс. глубину» или увеличьте лимит узлов в настройках."
+
+msgid "No indexable properties found at this depth."
+msgstr "На этой глубине не найдено свойств, доступных для индексации."
+
+msgid "Tree cache cleared."
+msgstr "Кэш дерева очищен."
+
+msgid "You no longer have permission to modify this index."
+msgstr "У вас больше нет права изменять этот индекс."
+
+msgid "Added @n field(s) to %index."
+msgstr "Добавлено полей: @n — в индекс %index."
+
+msgid "Also created @n aggregation-target duplicate field(s) (field ID suffixed \"_agg\")."
+msgstr "Также создано полей-дубликатов для агрегации: @n (с суффиксом «_agg» в имени поля)."
+
+msgid "The following added field(s) need additional configuration before they will work correctly — edit them on the Fields tab: @list"
+msgstr "Следующим добавленным полям требуется дополнительная настройка, прежде чем они заработают корректно — отредактируйте их на вкладке «Fields»: @list"
+
+# ---------------------------------------------------------------------------
+# SearchByEntityTypeForm
+# ---------------------------------------------------------------------------
+
+msgid "Target entity type"
+msgstr "Целевой тип сущности"
+
+msgid "- Select -"
+msgstr "— Выберите —"
+
+msgid "Bundle"
+msgstr "Подтип (bundle)"
+
+msgid "- Any bundle -"
+msgstr "— Любой подтип —"
+
+msgid "Search"
+msgstr "Искать"
+
+msgid "Pick a target entity type above and click Search."
+msgstr "Выберите выше целевой тип сущности и нажмите «Искать»."
+
+msgid "Index"
+msgstr "Индекс"
+
+msgid "Server"
+msgstr "Сервер"
+
+msgid "- Any server -"
+msgstr "— Любой сервер —"
+
+msgid "Index(es)"
+msgstr "Индекс(ы)"
+
+msgid "Leave empty to search every index."
+msgstr "Оставьте пустым, чтобы искать по всем индексам."
+
+msgid "No chains to this entity type were found at this depth."
+msgstr "На этой глубине не найдено цепочек, ведущих к этому типу сущности."
+
+msgid "The property tree was too large to walk fully at this depth for the following index(es), so some matches may be missing: @list. Lower \"Max depth\" won't help here — raise the node budget in the settings instead, or narrow the search."
+msgstr "Дерево свойств оказалось слишком большим, чтобы обойти его полностью на этой глубине, для следующих индексов, поэтому часть совпадений может быть пропущена: @list. Уменьшение «Макс. глубины» здесь не поможет — вместо этого увеличьте лимит узлов в настройках, либо сузьте поиск."
+
+msgid "Skipped index %index — you no longer have permission to modify it."
+msgstr "Индекс %index пропущен — у вас больше нет права его изменять."
+
+msgid "Added @n field(s) across @m index(es)."
+msgstr "Добавлено полей: @n — в индексах: @m."
+
+msgid "The following added field(s) need additional configuration before they will work correctly: @list"
+msgstr "Следующим добавленным полям требуется дополнительная настройка, прежде чем они заработают корректно: @list"
+
+# ---------------------------------------------------------------------------
+# Permissions (search_api_field_explorer.permissions.yml already contains
+# Russian titles/descriptions directly, per this site's convention for
+# permissions.yml — no separate ru.po entries needed for those, matching
+# search_api_sql_aggregator.permissions.yml's own established pattern).
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# OrphanedTablesForm / OrphanedTablesConfirmForm (routing title "Field
+# Explorer: Cleanup" left untranslated, matching this module's existing
+# English-title convention for routing/task titles — see "Field Explorer"
+# and "Search by entity type" above, which are also routing titles, not
+# translated to Russian noun phrases but reused verbatim in Russian UI
+# copy elsewhere; only that one title string differs from this pattern
+# and is intentionally left as-is since it's a route/tab label, not
+# in-page copy).
+# ---------------------------------------------------------------------------
+
+msgid "Physical database tables that still exist but are no longer referenced by any field currently tracked on this index — leftovers from fields removed outside the normal cleanup path (config import, direct edits, or heavy field-renaming). Safe to remove; nothing currently reads them."
+msgstr "Физические таблицы БД, которые всё ещё существуют, но на них больше не ссылается ни одно поле, отслеживаемое сейчас на этом индексе, — остатки от полей, удалённых в обход штатного механизма очистки (импорт конфигурации, ручные правки или интенсивное переименование полей). Их можно безопасно удалить — сейчас их никто не читает."
+
+msgid "No orphaned tables found for this index."
+msgstr "Осиротевших таблиц для этого индекса не найдено."
+
+msgid "Table name"
+msgstr "Имя таблицы"
+
+msgid "Row count"
+msgstr "Количество строк"
+
+msgid "unknown"
+msgstr "неизвестно"
+
+msgid "Delete selected"
+msgstr "Удалить выбранные"
+
+msgid "Select at least one table to delete."
+msgstr "Выберите хотя бы одну таблицу для удаления."
+
+msgid "No table selection found — select tables to delete first."
+msgstr "Не найден список выбранных таблиц — сначала выберите таблицы для удаления."
+
+msgid "Delete this 1 orphaned table?"
+msgid_plural "Delete these @count orphaned tables?"
+msgstr[0] "Удалить эту осиротевшую таблицу?"
+msgstr[1] "Удалить эти @count осиротевшие таблицы?"
+msgstr[2] "Удалить эти @count осиротевших таблиц?"
+
+msgid "The following tables will be permanently dropped:"
+msgstr "Следующие таблицы будут безвозвратно удалены:"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Confirm table deletion"
+msgstr "Подтверждение удаления таблиц"
+
+msgid "Deleted 1 table."
+msgid_plural "Deleted @count tables."
+msgstr[0] "Удалена 1 таблица."
+msgstr[1] "Удалено @count таблицы."
+msgstr[2] "Удалено @count таблиц."
+
+msgid "Skipped @count table(s) that were no longer orphaned by the time of deletion (a field was likely re-added in the meantime): @tables"
+msgstr "Пропущено таблиц: @count — они больше не были осиротевшими к моменту удаления (вероятно, поле снова добавили тем временем): @tables"

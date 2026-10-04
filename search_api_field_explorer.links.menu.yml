@@ -1,0 +1,6 @@
+search_api_field_explorer.search_by_entity_type:
+  title: 'Search API Field Explorer'
+  description: 'Search across all configured Search API indexes for property chains leading to a given entity type, and add them as index fields.'
+  parent: system.admin_config_search
+  route_name: search_api_field_explorer.search_by_entity_type
+  weight: 15

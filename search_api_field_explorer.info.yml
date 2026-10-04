@@ -1,0 +1,9 @@
+name: 'Search API Field Explorer'
+type: module
+description: 'Walks the full Search API property tree (not just already-added index fields) to help administrators discover, group by target entity type/bundle, and add new fields to Search API indexes — including reverse lookup by target entity type across every configured index.'
+package: 'Search'
+core_version_requirement: ^10
+version: 1.0.0
+dependencies:
+  - search_api:search_api
+configure: search_api_field_explorer.settings

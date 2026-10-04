@@ -1,0 +1,14 @@
+access search api field explorer:
+  title: 'Search API Field Explorer: обзор дерева свойств'
+  description: 'Доступ к обзору полного дерева свойств Search API (не только уже добавленных полей) и к обратному поиску по типу сущности. Само по себе НЕ позволяет добавлять поля — только просматривать. Дополнительно требуется право «Administer Search API» на каждый конкретный индекс (то же право, что и для родной формы «Add fields» ядра Search API).'
+  restrict access: true
+
+add search api index fields via field explorer:
+  title: 'Search API Field Explorer: добавление полей в индекс'
+  description: 'Позволяет фактически создавать поля в индексах Search API через инструмент обзора/обратного поиска — то же действие, что и родная форма «Add fields» ядра Search API, тем же способом. Требуется ДОПОЛНИТЕЛЬНО к праву «обзор дерева свойств» выше и к праву «Administer Search API» на конкретный индекс. Ни одно право не выдано ни одной роли по умолчанию.'
+  restrict access: true
+
+cleanup orphaned search api tables:
+  title: 'Search API Field Explorer: очистка осиротевших таблиц'
+  description: 'Позволяет находить и УДАЛЯТЬ (DROP TABLE) физические таблицы search_api_db, на которые больше не ссылается ни одно поле индекса — например, оставшиеся после ручного/config-import удаления полей в обход штатной очистки search_api_db. Разрушительное, необратимое действие. Требуется ДОПОЛНИТЕЛЬНО к праву «Administer Search API» на конкретный индекс. Ни одно право не выдано ни одной роли по умолчанию.'
+  restrict access: true

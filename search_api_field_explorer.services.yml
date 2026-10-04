@@ -1,0 +1,24 @@
+services:
+  search_api_field_explorer.entity_target_resolver:
+    class: Drupal\search_api_field_explorer\Service\EntityTargetResolver
+    arguments: ['@search_api.fields_helper']
+
+  search_api_field_explorer.tree_walker:
+    class: Drupal\search_api_field_explorer\Service\PropertyTreeWalker
+    arguments: ['@search_api.fields_helper', '@search_api.data_type_helper', '@search_api_field_explorer.entity_target_resolver', '@cache.default', '@config.factory', '@entity_field.manager']
+
+  search_api_field_explorer.grouping:
+    class: Drupal\search_api_field_explorer\Service\GroupingService
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']
+
+  search_api_field_explorer.reverse_finder:
+    class: Drupal\search_api_field_explorer\Service\ReverseFinder
+    arguments: ['@entity_type.manager', '@search_api.fields_helper', '@search_api_field_explorer.tree_walker']
+
+  search_api_field_explorer.field_adder:
+    class: Drupal\search_api_field_explorer\Service\FieldAdder
+    arguments: ['@search_api.fields_helper']
+
+  search_api_field_explorer.orphaned_table_finder:
+    class: Drupal\search_api_field_explorer\Service\OrphanedTableFinder
+    arguments: ['@keyvalue', '@entity_type.manager']
