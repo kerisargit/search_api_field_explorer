@@ -18,8 +18,12 @@ class PropertyTreeWalker implements PropertyTreeWalkerInterface {
   private const MIN_DEPTH = 1;
   private const MAX_DEPTH = 20;
   private const DEFAULT_NODE_BUDGET = 5000;
+  // About 5 MB serialized: larger trees exceed MySQL's max_allowed_packet (16 MB
+  // by default) in the database cache, and walking them takes seconds anyway.
+  private const MAX_CACHED_NODES = 10000;
 
-  private const MAX_KEY_REPEATS = 3;
+  private const DEFAULT_KEY_REPEATS = 3;
+  private const MAX_KEY_REPEATS = 10;
 
   private const CACHE_TAG_ALL = 'search_api_field_explorer_tree';
 
@@ -29,6 +33,8 @@ class PropertyTreeWalker implements PropertyTreeWalkerInterface {
   protected CacheBackendInterface $cache;
   protected ConfigFactoryInterface $configFactory;
   protected EntityFieldManagerInterface $entityFieldManager;
+
+  private int $keyRepeats = self::DEFAULT_KEY_REPEATS;
 
   public function __construct(
     FieldsHelperInterface $fields_helper,
@@ -63,6 +69,7 @@ class PropertyTreeWalker implements PropertyTreeWalkerInterface {
 
     $nodes  = [];
     $budget = ['used' => 0, 'limit' => $this->getNodeBudget(), 'truncated' => FALSE];
+    $this->keyRepeats = $this->getKeyRepeats();
 
     $this->walk($properties, $datasource_id, [], '', '', 0, $maxDepth, $typeMapping, $existingFields, $nodes, $budget, NULL);
 
@@ -71,11 +78,13 @@ class PropertyTreeWalker implements PropertyTreeWalkerInterface {
       'truncated' => $budget['truncated'],
     ];
 
-    $tags = Cache::mergeTags(
-      $index->getCacheTags(),
-      ['entity_field_info', 'entity_bundles', 'entity_types', self::CACHE_TAG_ALL, self::CACHE_TAG_ALL . ':' . $index->id()]
-    );
-    $this->cache->set($cid, $result, Cache::PERMANENT, $tags);
+    if (\count($nodes) <= self::MAX_CACHED_NODES) {
+      $tags = Cache::mergeTags(
+        $index->getCacheTags(),
+        ['entity_field_info', 'entity_bundles', 'entity_types', 'config:search_api_field_explorer.settings', self::CACHE_TAG_ALL, self::CACHE_TAG_ALL . ':' . $index->id()]
+      );
+      $this->cache->set($cid, $result, Cache::PERMANENT, $tags);
+    }
 
     return $result;
   }
@@ -94,6 +103,11 @@ class PropertyTreeWalker implements PropertyTreeWalkerInterface {
   private function getNodeBudget(): int {
     $configured = (int) ($this->configFactory->get('search_api_field_explorer.settings')->get('node_budget') ?? 0);
     return $configured > 0 ? $configured : self::DEFAULT_NODE_BUDGET;
+  }
+
+  private function getKeyRepeats(): int {
+    $configured = (int) ($this->configFactory->get('search_api_field_explorer.settings')->get('max_key_repeats') ?? 0);
+    return $configured > 0 ? min($configured, self::MAX_KEY_REPEATS) : self::DEFAULT_KEY_REPEATS;
   }
 
   private function walk(
@@ -181,10 +195,12 @@ class PropertyTreeWalker implements PropertyTreeWalkerInterface {
 
       $cycleStopped = FALSE;
       $nextPathStack = $pathStack;
-      if ($target) {
+      // The "entity" child is the same hop as its reference field, which has
+      // already been counted.
+      if ($target && $key !== 'entity') {
         $stackKey = $target['entity_type_id'] . ($target['bundles'] ? ':' . implode(',', $target['bundles']) : '');
         $seenCount = $pathStack[$stackKey] ?? 0;
-        if ($seenCount >= self::MAX_KEY_REPEATS) {
+        if ($seenCount >= $this->keyRepeats) {
           $cycleStopped = TRUE;
         }
         else {

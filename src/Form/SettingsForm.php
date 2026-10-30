@@ -13,8 +13,11 @@ class SettingsForm extends ConfigFormBase {
   private const MAX_DEPTH = 20;
   private const DEFAULT_DEPTH = 5;
   private const MIN_NODE_BUDGET = 100;
-  private const MAX_NODE_BUDGET = 50000;
+  private const MAX_NODE_BUDGET = 200000;
   private const DEFAULT_NODE_BUDGET = 5000;
+  private const MIN_KEY_REPEATS = 1;
+  private const MAX_KEY_REPEATS = 10;
+  private const DEFAULT_KEY_REPEATS = 3;
 
   protected PropertyTreeWalkerInterface $walker;
 
@@ -53,6 +56,15 @@ class SettingsForm extends ConfigFormBase {
       '#max' => self::MAX_NODE_BUDGET,
       '#required' => TRUE,
     ];
+    $form['max_key_repeats'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Repeats of the same target per path'),
+      '#description' => $this->t('How many times one path may follow a reference into the same entity type and bundles (for example paragraphs nested in paragraphs) before the walk stops there. Clamped to @min-@max.', ['@min' => self::MIN_KEY_REPEATS, '@max' => self::MAX_KEY_REPEATS]),
+      '#default_value' => (int) ($config->get('max_key_repeats') ?: self::DEFAULT_KEY_REPEATS),
+      '#min' => self::MIN_KEY_REPEATS,
+      '#max' => self::MAX_KEY_REPEATS,
+      '#required' => TRUE,
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -60,10 +72,12 @@ class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $maxDepth = \max(self::MIN_DEPTH, \min(self::MAX_DEPTH, (int) $form_state->getValue('max_depth')));
     $nodeBudget = \max(self::MIN_NODE_BUDGET, \min(self::MAX_NODE_BUDGET, (int) $form_state->getValue('node_budget')));
+    $keyRepeats = \max(self::MIN_KEY_REPEATS, \min(self::MAX_KEY_REPEATS, (int) $form_state->getValue('max_key_repeats')));
 
     $this->config('search_api_field_explorer.settings')
       ->set('max_depth', $maxDepth)
       ->set('node_budget', $nodeBudget)
+      ->set('max_key_repeats', $keyRepeats)
       ->save();
 
     $this->walker->invalidate();

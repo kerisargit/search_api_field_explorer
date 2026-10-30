@@ -52,6 +52,12 @@ msgstr "Лимит узлов на один обход дерева"
 msgid "Maximum number of properties to discover in a single walk before truncating (a safety net against very wide entity/bundle graphs). Clamped to @min-@max."
 msgstr "Максимальное число свойств, которые обнаруживаются за один обход, прежде чем результат обрежется (защита от очень широких графов сущностей/типов). Значение всегда ограничивается диапазоном @min-@max."
 
+msgid "Repeats of the same target per path"
+msgstr "Повторов одной цели в пути"
+
+msgid "How many times one path may follow a reference into the same entity type and bundles (for example paragraphs nested in paragraphs) before the walk stops there. Clamped to @min-@max."
+msgstr "Сколько раз один путь может пройти по ссылке в один и тот же тип сущности и набор бандлов (например, параграфы внутри параграфов), прежде чем обход остановится. Значение всегда ограничивается диапазоном @min-@max."
+
 # ---------------------------------------------------------------------------
 # Shared across BrowseIndexForm and SearchByEntityTypeForm
 # ---------------------------------------------------------------------------

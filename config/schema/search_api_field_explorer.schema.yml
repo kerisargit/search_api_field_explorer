@@ -8,3 +8,6 @@ search_api_field_explorer.settings:
     node_budget:
       type: integer
       label: 'Maximum discovered nodes per tree walk before truncating (default 5000)'
+    max_key_repeats:
+      type: integer
+      label: 'How many times one path may enter the same target entity type and bundles (default 3, clamped 1-10)'

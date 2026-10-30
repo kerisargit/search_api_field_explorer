@@ -23,9 +23,12 @@ use Drupal\Tests\UnitTestCase;
  */
 class PropertyTreeWalkerTest extends UnitTestCase {
 
-  private function makeConfigFactory(int $nodeBudget = 0): ConfigFactoryInterface {
+  private function makeConfigFactory(int $nodeBudget = 0, int $keyRepeats = 0): ConfigFactoryInterface {
     $config = $this->createMock(ImmutableConfig::class);
-    $config->method('get')->with('node_budget')->willReturn($nodeBudget);
+    $config->method('get')->willReturnMap([
+      ['node_budget', $nodeBudget],
+      ['max_key_repeats', $keyRepeats],
+    ]);
 
     $configFactory = $this->createMock(ConfigFactoryInterface::class);
     $configFactory->method('get')->with('search_api_field_explorer.settings')->willReturn($config);
@@ -51,7 +54,10 @@ class PropertyTreeWalkerTest extends UnitTestCase {
     return $index;
   }
 
-  public function testCycleGuardStopsSelfReferencingChain(): void {
+  /**
+   * Walks a field that references its own entity type, keyed by path.
+   */
+  private function walkSelfReferencingChain(int $keyRepeats = 0): array {
     $refFieldItem = $this->createMock(ComplexDataDefinitionInterface::class);
     $refFieldItem->method('getLabel')->willReturn('Ref');
     $refFieldItem->method('getMainPropertyName')->willReturn('target_id');
@@ -97,33 +103,43 @@ class PropertyTreeWalkerTest extends UnitTestCase {
     $dataTypeHelper->method('getFieldTypeMapping')->willReturn(['integer' => 'integer']);
 
     $resolver = new EntityTargetResolver($fieldsHelper);
-    $walker = new PropertyTreeWalker($fieldsHelper, $dataTypeHelper, $resolver, $this->makeCache(), $this->makeConfigFactory(), $this->makeEntityFieldManager());
+    $walker = new PropertyTreeWalker($fieldsHelper, $dataTypeHelper, $resolver, $this->makeCache(), $this->makeConfigFactory(0, $keyRepeats), $this->makeEntityFieldManager());
 
-    $index = $this->makeIndex(['ref' => $refFieldItem]);
-    $result = $walker->getTree($index, NULL, 8);
-
+    $result = $walker->getTree($this->makeIndex(['ref' => $refFieldItem]), NULL, 12);
     $this->assertFalse($result['truncated']);
 
     $byPath = [];
     foreach ($result['nodes'] as $node) {
       $byPath[$node['property_path']] = $node;
     }
+    return $byPath;
+  }
 
-    $this->assertCount(4, $result['nodes']);
-    $this->assertArrayHasKey('ref', $byPath);
-    $this->assertArrayHasKey('ref:entity', $byPath);
-    $this->assertArrayHasKey('ref:entity:ref', $byPath);
-    $this->assertArrayHasKey('ref:entity:ref:entity', $byPath);
-    $this->assertArrayNotHasKey('ref:entity:ref:entity:ref', $byPath);
+  public function testCycleGuardStopsSelfReferencingChain(): void {
+    $byPath = $this->walkSelfReferencingChain();
+
+    // Three hops into the same target are walked; the fourth is stopped.
+    $third = 'ref:entity:ref:entity:ref:entity';
+    $fourth = $third . ':ref';
+    $this->assertCount(7, $byPath);
+    $this->assertArrayHasKey($third, $byPath);
+    $this->assertArrayHasKey($fourth, $byPath);
+    $this->assertArrayNotHasKey($fourth . ':entity', $byPath);
 
     $this->assertSame('test_entity', $byPath['ref']['target_entity_type']);
-    $this->assertFalse($byPath['ref']['cycle_stopped']);
+    foreach (['ref', 'ref:entity', 'ref:entity:ref', 'ref:entity:ref:entity', 'ref:entity:ref:entity:ref', $third] as $path) {
+      $this->assertFalse($byPath[$path]['cycle_stopped'], $path);
+    }
+    $this->assertTrue($byPath[$fourth]['cycle_stopped']);
+  }
 
+  public function testRepeatLimitComesFromSettings(): void {
+    $byPath = $this->walkSelfReferencingChain(1);
+    $this->assertCount(3, $byPath);
     $this->assertFalse($byPath['ref:entity']['cycle_stopped']);
-    $this->assertFalse($byPath['ref:entity:ref']['cycle_stopped']);
+    $this->assertTrue($byPath['ref:entity:ref']['cycle_stopped']);
 
-    $this->assertSame('test_entity', $byPath['ref:entity:ref:entity']['target_entity_type']);
-    $this->assertTrue($byPath['ref:entity:ref:entity']['cycle_stopped']);
+    $this->assertCount(11, $this->walkSelfReferencingChain(5));
   }
 
   public function testInheritedBundleRestrictionNarrowsEntityHopChildren(): void {
@@ -237,6 +253,40 @@ class PropertyTreeWalkerTest extends UnitTestCase {
 
     $this->assertTrue($result['truncated']);
     $this->assertCount(3, $result['nodes']);
+  }
+
+  /**
+   * @dataProvider providerCachedTreeSize
+   */
+  public function testOnlyTreesThatFitTheDatabaseCacheAreCached(int $width, int $expectedSets): void {
+    $prop = $this->createMock(DataDefinitionInterface::class);
+    $prop->method('getLabel')->willReturn('Field');
+    $prop->method('getDataType')->willReturn('string');
+    $properties = [];
+    for ($i = 0; $i < $width; $i++) {
+      $properties['field_' . $i] = $prop;
+    }
+
+    $fieldsHelper = $this->createMock(FieldsHelperInterface::class);
+    $fieldsHelper->method('getInnerProperty')->willReturnArgument(0);
+    $fieldsHelper->method('filterForPropertyPath')->willReturn([]);
+    $dataTypeHelper = $this->createMock(DataTypeHelperInterface::class);
+    $dataTypeHelper->method('getFieldTypeMapping')->willReturn(['string' => 'string']);
+
+    $cache = $this->makeCache();
+    $cache->expects($this->exactly($expectedSets))->method('set');
+
+    $walker = new PropertyTreeWalker($fieldsHelper, $dataTypeHelper, new EntityTargetResolver($fieldsHelper), $cache, $this->makeConfigFactory(20000), $this->makeEntityFieldManager());
+    $result = $walker->getTree($this->makeIndex($properties), NULL, 2);
+
+    $this->assertCount($width, $result['nodes']);
+  }
+
+  public static function providerCachedTreeSize(): array {
+    return [
+      'small tree' => [5, 1],
+      'over the limit' => [10001, 0],
+    ];
   }
 
   public function testMaxDepthIsClampedRegardlessOfInput(): void {
