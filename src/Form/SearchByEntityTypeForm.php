@@ -75,13 +75,17 @@ class SearchByEntityTypeForm extends FormBase {
         $bundleOptions[$bundleId] = (string) ($info['label'] ?? $bundleId);
       }
     }
-    $form['controls']['bundle'] = [
+    // The wrapper is always rendered so the AJAX callback has a target even
+    // when no entity type was selected on the first page load.
+    $form['controls']['bundle_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'search-api-field-explorer-bundle-wrapper'],
+    ];
+    $form['controls']['bundle_wrapper']['bundle'] = [
       '#type' => 'select',
       '#title' => $this->t('Bundle'),
       '#options' => ['' => $this->t('- Any bundle -')] + $bundleOptions,
       '#default_value' => $selectedBundle ?: '',
-      '#prefix' => '<div id="search-api-field-explorer-bundle-wrapper">',
-      '#suffix' => '</div>',
       '#access' => (bool) $bundleOptions,
     ];
     $form['controls']['server_id'] = [
@@ -426,7 +430,7 @@ class SearchByEntityTypeForm extends FormBase {
   }
 
   public function updateBundleOptions(array &$form, FormStateInterface $form_state) {
-    return $form['controls']['bundle'];
+    return $form['controls']['bundle_wrapper'];
   }
 
   public function updateIndexOptions(array &$form, FormStateInterface $form_state) {
